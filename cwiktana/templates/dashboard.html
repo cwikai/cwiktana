@@ -1,0 +1,49 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}Home - Cwiktana{% endblock %}
+
+{% block content %}
+<section class="col-12 col-md-9 order-1 order-md-2">
+  <div class="container py-4">
+    <h1 class="text-center">Welcome to Cwiktana</h1>
+    <p class="text-center">Your one-stop solution for managing members.</p>
+
+    <div class="row g-4 mt-4">
+
+      <!-- Membership Tile -->
+      <div class="col-12 col-sm-6 col-md-4">
+        <a href="{% url 'manage_members' %}" class="tile">
+          <h4>💳 Memberships</h4>
+          <p>Manage your club memberships</p>
+        </a>
+      </div>
+
+      <!-- Classes Tile -->
+      <div class="col-12 col-sm-6 col-md-4">
+        <a href="{% url 'manage_classes' %}" class="tile">
+          <h4>📚 Classes</h4>
+          <p>View and manage classes</p>
+        </a>
+      </div>
+
+      <!-- Grading Tile -->
+      <div class="col-12 col-sm-6 col-md-4">
+        <a href="{% url 'manage_gradings' %}" class="tile">
+          <h4>📊 Grading</h4>
+          <p>View and manage grading</p>
+        </a>
+      </div>
+
+      <!-- Licenses Tile -->
+      <div class="col-12 col-sm-6 col-md-4">
+        <a href="{% url 'manage_licenses' %}" class="tile">
+          <h4>🔑 Licenses</h4>
+          <p>View and manage licenses</p>
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>
+{% endblock %}

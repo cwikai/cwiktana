@@ -1,0 +1,30 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}Home - Cwiktana{% endblock %}
+
+{% block content %}
+
+<section class="col-12 col-md-9 order-1 order-md-2">
+  <div class="container py-4">
+    <h1 class="text-center">Welcome to Cwiktana</h1>
+    <p class="text-center">Your one-stop solution for managing members.</p>
+
+    <!-- Membership Tile -->
+      <div class="col-12 col-sm-6 col-md-4">
+        <a href="{% url 'register' %}" class="tile">
+          <h4>💳 Signup</h4>
+          <p>Signup to cwiktana today</p>
+        </a>
+      </div>
+
+      <!-- Classes Tile -->
+      <div class="col-12 col-sm-6 col-md-4">
+        <a href="{% url 'login' %}" class="tile">
+          <h4> Login</h4>
+          <p>View and manage classes</p>
+        </a>
+      </div>
+
+
+{% endblock %}
