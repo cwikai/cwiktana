@@ -15,7 +15,7 @@ urlpatterns = [
     path('terms/', views.terms, name='terms'),
     path('add_member/', views.add_member, name='add_member'),
     path('classes/', include('classes.urls', namespace='classes')),
-    path('gradings/', include('gradings.urls', namespace='gradings')),  # Added gradings app URLs
+    path('grading_list/', include('gradings.urls', namespace='gradings')),  # Added gradings app URLs
     path('manage_gradings/', views.manage_gradings, name='manage_gradings'),  # Optional: project-level view if still needed
     path('licenses/', views.manage_licenses, name='manage_licenses'),
     path('accounts/', include('accounts.urls')),

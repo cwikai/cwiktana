@@ -12,7 +12,8 @@ def dashboard(request):
 def manage_classes(request):
     return render(request, 'manage_classes.html')
 def manage_gradings(request):
-    return render(request, 'grading_list.html')
+    return render(request, 'gradings/grading_list.html')  
+
 def manage_licenses(request):
     return render(request, 'manage_licenses.html')
 
