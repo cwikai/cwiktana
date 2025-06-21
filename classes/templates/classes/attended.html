@@ -1,0 +1,48 @@
+{% extends 'layout.html' %}
+
+{% block title %}Attendees – {{ class_session.class_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <!-- Page Heading -->
+  <h1 class="text-glow text-center">✅ Attended – {{ class_session.class_name }}</h1>
+  <p class="text-center"><strong>Instructor:</strong> {{ class_session.instructor }}</p>
+  <p class="text-center"><strong>Date:</strong> {{ class_session.start_time|date:"D, d M Y H:i" }}</p>
+
+  <!-- Attendee Table -->
+  <div class="tile mt-4">
+    <h4 class="mb-3 text-center">👥 Attendees</h4>
+    <table class="table table-dark table-striped table-bordered text-center align-middle">
+      <thead>
+        <tr>
+          <th class="text-center">Member</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for member in attendees %}
+        <tr>
+          <td>
+            <div class="d-flex flex-column align-items-center">
+              {% if member.profile_picture %}
+                <img src="{{ member.profile_picture.url }}" alt="{{ member.first_name }}" class="img-thumbnail" style="max-height: 110px; max-width: 110px;">
+              {% else %}
+                <img src="/static/img/default-avatar.png" alt="Default avatar" class="rounded-circle mb-2" width="80" height="80" style="object-fit: cover;">
+              {% endif %}
+              <strong>{{ member.first_name }} {{ member.last_name }}</strong>
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td class="text-muted">No attendees recorded for this class.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="text-center">
+    <a href="{% url 'classes:class_archive' %}" class="btn btn-outline-light mt-3">⬅ Back to Archived Classes</a>
+  </div>
+</div>
+{% endblock %}

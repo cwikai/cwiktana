@@ -11,21 +11,32 @@
 
     <div class="row g-4 mt-4">
 
+
+       <!-- Settings Tile -->
+      <div class="col-12 col-sm-6 col-md-4">
+        <a href="{% url 'members:members_list' %}" class="tile">
+          <h4>💳 Settings</h4>
+          <p>Customise you cwiktana settings</p>
+        </a>
+      </div>
+
       <!-- Membership Tile -->
       <div class="col-12 col-sm-6 col-md-4">
-        <a href="{% url 'manage_members' %}" class="tile">
+        <a href="{% url 'members:members_list' %}" class="tile">
           <h4>💳 Memberships</h4>
           <p>Manage your club memberships</p>
         </a>
       </div>
 
       <!-- Classes Tile -->
-      <div class="col-12 col-sm-6 col-md-4">
-        <a href="{% url 'manage_classes' %}" class="tile">
-          <h4>📚 Classes</h4>
-          <p>View and manage classes</p>
-        </a>
-      </div>
+      <<!-- Classes Tile -->
+<div class="col-12 col-sm-6 col-md-4">
+  <a href="{% url 'classes:classes_list' %}" class="tile">
+    <h4>📚 Classes</h4>
+    <p>View and manage classes</p>
+  </a>
+</div>
+
 
       <!-- Grading Tile -->
       <div class="col-12 col-sm-6 col-md-4">

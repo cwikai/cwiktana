@@ -1,0 +1,291 @@
+{% extends 'layout.html' %}
+
+{% block title %}Manage Classes – Cwiktana{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <!-- Page Heading and Archive Toggle -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="text-glow">📅 Classes</h1>
+  <div>
+    <button type="button" class="btn btn-warning me-2" data-bs-toggle="modal" data-bs-target="#classModal" id="addClassBtn">
+      ➕ Add Class
+    </button>
+    <a href="{% url 'classes:class_archive' %}" class="btn btn-outline-light">📦 View Archived</a>
+  </div>
+</div>
+
+
+  <!-- Search -->
+  <form method="GET" class="mb-4">
+    <input type="hidden" name="show" value="{% if show_archived %}archived{% else %}active{% endif %}">
+    <input type="text" name="q" value="{{ query }}" class="form-control" placeholder="Search classes by name or instructor..." />
+  </form>
+
+  <!-- Classes Table Tile -->
+  <div class="tile">
+    <h4 class="mb-3">📋 Class List</h4>
+    <table class="table table-dark table-striped table-bordered rounded align-middle">
+      <thead>
+        <tr>
+          <th>Class Name</th>
+          <th>Instructor</th>
+          <th>Start Time</th>
+          <th>End Time</th>
+          <th>Location</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for classsession in classes %}
+        <tr>
+          <td>{{ classsession.class_name }}</td>
+          <td>{{ classsession.instructor }}</td>
+          <td>{{ classsession.start_time|date:"D, d M Y H:i" }}</td>
+          <td>{{ classsession.end_time|date:"D, d M Y H:i" }}</td>
+          <td>{{ classsession.location }}</td>
+          <td>
+            {% if classsession.status == 'scheduled' %}
+              <span class="badge bg-info text-dark">Scheduled</span>
+            {% elif classsession.status == 'completed' %}
+              <span class="badge bg-success">Completed</span>
+            {% elif classsession.status == 'canceled' %}
+              <span class="badge bg-warning text-dark">Canceled</span>
+            {% else %}
+              <span class="badge bg-secondary">Unknown</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if not show_archived %}
+              <!-- Attendance Button -->
+              <a href="{% url 'classes:class_register' classsession.id %}" class="btn btn-sm btn-outline-info mb-1">
+  📋 Attendance
+</a>
+
+
+              <!-- Edit Button -->
+              <a href="#" class="btn btn-sm btn-warning mb-1 edit-class-btn"
+                 data-id="{{ classsession.pk }}"
+                 data-class_name="{{ classsession.class_name|escapejs }}"
+                 data-instructor="{{ classsession.instructor|escapejs }}"
+                 data-start_time="{{ classsession.start_time|date:'Y-m-d\\TH:i' }}"
+                 data-end_time="{{ classsession.end_time|date:'Y-m-d\\TH:i' }}"
+                 data-location="{{ classsession.location|escapejs }}">Edit</a>
+
+              <!-- Cancel Button -->
+              <form action="{% url 'classes:cancel_class' classsession.pk %}" method="POST" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-warning mb-1" onclick="return confirm('Cancel this class and archive it?');">Cancel</button>
+              </form>
+
+              <!-- Complete Button -->
+              <form action="{% url 'classes:complete_class' classsession.pk %}" method="POST" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-success mb-1" onclick="return confirm('Mark this class as complete and archive it?');">Complete</button>
+              </form>
+
+            {% else %}
+              <span class="text-muted">Archived</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7">No classes found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <!-- Pagination -->
+    ... <!-- (Pagination unchanged) -->
+  </div>
+</div>
+
+<!-- Add/Edit Class Modal -->
+<div class="modal fade" id="classModal" tabindex="-1" aria-labelledby="classModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content bg-dark text-light">
+      <div class="modal-header">
+        <h5 class="modal-title" id="classModalLabel">Add/Edit Class</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form id="classForm" method="post">
+        {% csrf_token %}
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="class_name" class="form-label">Class Name</label>
+            <input type="text" class="form-control" name="class_name" required>
+          </div>
+          <div class="mb-3">
+            <label for="instructor" class="form-label">Instructor</label>
+            <input type="text" class="form-control" name="instructor" required>
+          </div>
+          <div class="mb-3">
+            <label for="start_time" class="form-label">Start Time</label>
+            <input type="datetime-local" class="form-control" name="start_time" required>
+          </div>
+          <div class="mb-3">
+            <label for="end_time" class="form-label">End Time</label>
+            <input type="datetime-local" class="form-control" name="end_time" required>
+          </div>
+          <div class="mb-3">
+            <label for="location" class="form-label">Location</label>
+            <input type="text" class="form-control" name="location">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Attendance Modal -->
+<div class="modal fade" id="attendanceModal" tabindex="-1" aria-labelledby="attendanceModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content bg-dark text-light">
+      <div class="modal-header">
+        <h5 class="modal-title" id="attendanceModalLabel">Class Attendance</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form id="attendance-form">
+        {% csrf_token %}
+        <div class="modal-body">
+          <div id="attendance-list" class="px-3">
+            <!-- Members will be loaded here via JS -->
+            <p class="text-muted">Loading members...</p>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">Save Attendance</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- JavaScript -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("classForm");
+  const modalEl = document.getElementById("classModal");
+  const modal = new bootstrap.Modal(modalEl);
+  const modalTitle = document.getElementById("classModalLabel");
+  const addBtn = document.getElementById("addClassBtn");
+
+  addBtn.addEventListener("click", () => {
+    form.reset();
+    form.action = "{% url 'classes:add_class' %}";
+    modalTitle.textContent = "Add New Class";
+  });
+
+  document.querySelectorAll(".edit-class-btn").forEach(btn => {
+    btn.addEventListener("click", e => {
+      e.preventDefault();
+      form.action = `/classes/edit/${btn.dataset.id}/`;
+      modalTitle.textContent = "Edit Class";
+      form.querySelector("[name='class_name']").value = btn.dataset.class_name;
+      form.querySelector("[name='instructor']").value = btn.dataset.instructor;
+      form.querySelector("[name='start_time']").value = btn.dataset.start_time;
+      form.querySelector("[name='end_time']").value = btn.dataset.end_time;
+      form.querySelector("[name='location']").value = btn.dataset.location;
+      modal.show();
+    });
+  });
+
+  // Submit Add/Edit class form via AJAX
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    const formData = new FormData(form);
+    const actionUrl = form.action;
+
+    fetch(actionUrl, {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+      },
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        location.reload(); // Refresh page to show updated classes
+      } else {
+        alert("Error saving class.");
+        console.error(data.errors);
+      }
+    })
+    .catch(error => {
+      alert("An error occurred.");
+      console.error(error);
+    });
+  });
+
+  // Attendance modal logic
+  const attendanceModal = document.getElementById('attendanceModal');
+  const attendanceList = document.getElementById('attendance-list');
+
+  attendanceModal.addEventListener('show.bs.modal', function (event) {
+    const button = event.relatedTarget;
+    const classId = button.getAttribute('data-class-id');
+
+    // Store classId on modal for later use in saving attendance
+    attendanceModal.setAttribute('data-class-id', classId);
+
+    attendanceList.innerHTML = '<p class="text-muted">Loading members...</p>';
+
+    fetch(`/classes/${classId}/attendance/`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.members.length === 0) {
+          attendanceList.innerHTML = '<p class="text-muted">No members found.</p>';
+        } else {
+          attendanceList.innerHTML = data.members.map(member => `
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="checkbox" name="attendance" value="${member.id}" id="member-${member.id}" ${member.present ? 'checked' : ''}>
+              <label class="form-check-label" for="member-${member.id}">
+                <img src="${member.profile_photo}" alt="Profile" class="rounded-circle me-2" width="32" height="32" style="object-fit: cover;">
+                ${member.forename} ${member.surname}
+              </label>
+            </div>
+          `).join('');
+        }
+      });
+  });
+
+  // Submit attendance form via AJAX
+  const attendanceForm = document.getElementById('attendance-form');
+  attendanceForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    const checkboxes = attendanceList.querySelectorAll('input[name="attendance"]:checked');
+    const attendance = Array.from(checkboxes).map(cb => cb.value);
+    const classId = attendanceModal.getAttribute('data-class-id');
+
+    fetch(`/classes/${classId}/attendance/save/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+      },
+      body: JSON.stringify({ attendance: attendance }),
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        alert("Attendance saved successfully.");
+        bootstrap.Modal.getInstance(attendanceModal).hide();
+      } else {
+        alert("Error saving attendance.");
+      }
+    })
+    .catch(error => {
+      console.error("Error:", error);
+      alert("An error occurred.");
+    });
+  });
+});
+</script>
+
+{% endblock %}

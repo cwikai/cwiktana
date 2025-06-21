@@ -1,0 +1,96 @@
+/* ==== GLOBAL BODY ==== */
+body {
+    font-family: 'Rajdhani', sans-serif;
+    background: url('../images/circuit_bg.png') no-repeat center center fixed;
+    background-size: cover;
+    color: #e0f7fa;
+    margin: 0;
+    padding: 20px;
+}
+
+/* ==== HEADINGS ==== */
+h1, h2, h3 {
+    color: #00CED1; /* Cool cyan */
+}
+
+/* ==== PARAGRAPHS ==== */
+p {
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+/* ==== BUTTONS ==== */
+.btn-warning {
+    background-color: #00CED1; /* Neon cyan */
+    color: #0a1f2e; /* Dark background */
+    border: none;
+    padding: 10px 20px;
+    font-weight: bold;
+    border-radius: 8px;
+    text-decoration: none;
+    box-shadow: 0 0 8px #00FFD5;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.btn-warning:hover {
+    background-color: #00FF7F; /* Neon green */
+    color: #0a1f2e;
+    transform: scale(1.08);
+    box-shadow: 0 0 15px #00FF7F;
+}
+
+/* ==== FOOTER ==== */
+footer {
+    background-color: #0d1b2a;
+    padding: 10px;
+    text-align: center;
+    font-size: 14px;
+    color: #6c757d;
+}
+
+/* ==== TILES ==== */
+.tile {
+    display: block;
+    background: rgba(18, 41, 58, 0.95);
+    border: 2px solid #00FF7F;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    text-align: center;
+    text-decoration: none;
+    color: #e0f7fa;
+    height: 100%;
+    box-shadow: 0 0 12px rgba(0, 255, 127, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+}
+
+.tile:hover {
+    transform: scale(1.04);
+    box-shadow: 0 0 24px rgba(0, 255, 127, 0.6);
+    background: rgba(20, 50, 70, 0.95);
+}
+
+.tile h4 {
+    margin-bottom: 0.5rem;
+    color: #00FF7F;
+}
+
+.tile p {
+    margin-bottom: 0;
+    font-size: 0.95rem;
+    color: #b8f1ff;
+}
+
+/* ==== TEXT UTILITIES ==== */
+.text-center {
+    color: #00FF7F;
+}
+.mb-4 {
+    color: #00FF7F;
+}
+.mb-3 {
+    color: #00FF7F;
+}
+.nav-item {
+    color: #00FF7F;
+    text-decoration: none;
+}

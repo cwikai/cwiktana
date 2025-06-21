@@ -1,7 +1,14 @@
 /* ==== GLOBAL BODY ==== */
 body {
     font-family: 'Rajdhani', sans-serif;
-    background: linear-gradient(145deg, #0a1f2e, #12293a); /* Dark tech theme */
+    background: 
+        linear-gradient(145deg, #0a1f2e, #12293a),
+        url("../images/circuit_bg.png"); /* Path to your static image */
+    background-blend-mode: overlay;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
     color: #e0f7fa;
     margin: 0;
     padding: 20px;
@@ -15,7 +22,6 @@ h1, h2, h3 {
 /* ==== PARAGRAPHS ==== */
 p {
     font-size: 16px;
-
     line-height: 1.5;
 }
 
@@ -79,14 +85,16 @@ footer {
     font-size: 0.95rem;
     color: #b8f1ff;
 }
+
+/* ==== TEXT COLORS ==== */
 .text-center {
-  color: #00FF7F;
+    color: #00FF7F;
 }
-.mb-4{
-  color: #00FF7F;
+.mb-4 {
+    color: #00FF7F;
 }
-.mb-3{
-  color: #00FF7F;
+.mb-3 {
+    color: #00FF7F;
 }
 .nav-item {
     color: #00FF7F;

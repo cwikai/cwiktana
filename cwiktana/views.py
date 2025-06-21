@@ -9,12 +9,10 @@ def homepage(request):
 @login_required
 def dashboard(request):
     return render(request, 'dashboard.html')
-def manage_members(request):
-    return render(request, 'manage_members.html')
 def manage_classes(request):
     return render(request, 'manage_classes.html')
 def manage_gradings(request):
-    return render(request, 'manage_gradings.html')
+    return render(request, 'grading_list.html')
 def manage_licenses(request):
     return render(request, 'manage_licenses.html')
 

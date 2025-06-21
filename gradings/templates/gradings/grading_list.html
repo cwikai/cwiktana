@@ -1,0 +1,262 @@
+{% extends 'layout.html' %}
+
+{% block title %}Manage Gradings – Cwiktana{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <!-- Page Heading and Archive Toggle -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="text-glow">📊 Gradings</h1>
+    <div>
+      <button type="button" class="btn btn-warning me-2" data-bs-toggle="modal" data-bs-target="#gradingModal" id="addGradingBtn">
+        ➕ Add Grading
+      </button>
+      <a href="{% url 'gradings:grading_archive' %}" class="btn btn-outline-light">📦 View Archived</a>
+    </div>
+  </div>
+
+  <!-- Search -->
+  <form method="GET" class="mb-4">
+    <input type="hidden" name="show" value="{% if show_archived %}archived{% else %}active{% endif %}">
+    <input type="text" name="q" value="{{ query }}" class="form-control" placeholder="Search gradings by name or instructor..." />
+  </form>
+
+  <!-- Gradings Table Tile -->
+  <div class="tile">
+    <h4 class="mb-3">📋 Grading List</h4>
+    <table class="table table-dark table-striped table-bordered rounded align-middle">
+      <thead>
+        <tr>
+          <th>Grading Name</th>
+          <th>Instructor</th>
+          <th>Examiner</th>
+          <th>Start Time</th>
+          <th>End Time</th>
+          <th>Location</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for grading in gradings %}
+        <tr>
+          <td>{{ grading.class_name }}</td>
+          <td>{{ grading.instructor }}</td>
+          <td>{{ grading.Examiner }}</td>
+          <td>{{ grading.start_time|date:"D, d M Y H:i" }}</td>
+          <td>{{ grading.end_time|date:"D, d M Y H:i" }}</td>
+          <td>{{ grading.location }}</td>
+          <td>
+            {% if grading.status == 'scheduled' %}
+              <span class="badge bg-info text-dark">Scheduled</span>
+            {% elif grading.status == 'completed' %}
+              <span class="badge bg-success">Completed</span>
+            {% elif grading.status == 'canceled' %}
+              <span class="badge bg-warning text-dark">Canceled</span>
+            {% else %}
+              <span class="badge bg-secondary">Unknown</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if not show_archived %}
+              <!-- Attendance Button -->
+              <a href="{% url 'gradings:grading_register' grading.id %}" class="btn btn-sm btn-outline-info mb-1">📋 Attendance</a>
+
+              <!-- Edit Button -->
+              <a href="#" class="btn btn-sm btn-warning mb-1 edit-grading-btn"
+                 data-id="{{ grading.pk }}"
+                 data-class_name="{{ grading.class_name|escapejs }}"
+                 data-instructor="{{ grading.instructor|escapejs }}"
+                 data-examiner="{{ grading.Examiner|escapejs }}"
+                 data-start_time="{{ grading.start_time|date:'Y-m-d\\TH:i' }}"
+                 data-end_time="{{ grading.end_time|date:'Y-m-d\\TH:i' }}"
+                 data-location="{{ grading.location|escapejs }}">Edit</a>
+
+              <!-- Cancel Button -->
+              <form action="{% url 'gradings:cancel_grading' grading.pk %}" method="POST" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-warning mb-1" onclick="return confirm('Cancel this grading and archive it?');">Cancel</button>
+              </form>
+
+              <!-- Complete Button -->
+              <form action="{% url 'gradings:complete_grading' grading.pk %}" method="POST" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-success mb-1" onclick="return confirm('Mark this grading as complete and archive it?');">Complete</button>
+              </form>
+
+            {% else %}
+              <span class="text-muted">Archived</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="8">No gradings found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <!-- Pagination -->
+    ... <!-- (Pagination unchanged) -->
+  </div>
+</div>
+
+<!-- Add/Edit Grading Modal -->
+<div class="modal fade" id="gradingModal" tabindex="-1" aria-labelledby="gradingModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content bg-dark text-light">
+      <div class="modal-header">
+        <h5 class="modal-title" id="gradingModalLabel">Add/Edit Grading</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form id="gradingForm" method="post">
+        {% csrf_token %}
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="class_name" class="form-label">Grading Name</label>
+            <input type="text" class="form-control" name="class_name" required>
+          </div>
+          <div class="mb-3">
+            <label for="instructor" class="form-label">Instructor</label>
+            <input type="text" class="form-control" name="instructor" required>
+          </div>
+          <div class="mb-3">
+            <label for="examiner" class="form-label">Examiner</label>
+            <input type="text" class="form-control" name="Examiner">
+          </div>
+          <div class="mb-3">
+            <label for="start_time" class="form-label">Start Time</label>
+            <input type="datetime-local" class="form-control" name="start_time" required>
+          </div>
+          <div class="mb-3">
+            <label for="end_time" class="form-label">End Time</label>
+            <input type="datetime-local" class="form-control" name="end_time" required>
+          </div>
+          <div class="mb-3">
+            <label for="location" class="form-label">Location</label>
+            <input type="text" class="form-control" name="location">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Attendance Modal -->
+<div class="modal fade" id="attendanceModal" tabindex="-1" aria-labelledby="attendanceModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content bg-dark text-light">
+      <div class="modal-header">
+        <h5 class="modal-title" id="attendanceModalLabel">Grading Attendance</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form id="attendance-form">
+        {% csrf_token %}
+        <div class="modal-body">
+          <div id="attendance-list" class="px-3">
+            <!-- Members will be loaded here via JS -->
+            <p class="text-muted">Loading members...</p>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">Save Attendance</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- JavaScript -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("gradingForm");
+  const modalEl = document.getElementById("gradingModal");
+  const modal = new bootstrap.Modal(modalEl);
+  const modalTitle = document.getElementById("gradingModalLabel");
+  const addBtn = document.getElementById("addGradingBtn");
+
+  addBtn.addEventListener("click", () => {
+    form.reset();
+    form.action = "{% url 'gradings:add_grading' %}";
+    modalTitle.textContent = "Add New Grading";
+  });
+
+  document.querySelectorAll(".edit-grading-btn").forEach(btn => {
+    btn.addEventListener("click", e => {
+      e.preventDefault();
+      form.action = `/gradings/edit/${btn.dataset.id}/`;
+      modalTitle.textContent = "Edit Grading";
+      form.querySelector("[name='class_name']").value = btn.dataset.class_name;
+      form.querySelector("[name='instructor']").value = btn.dataset.instructor;
+      form.querySelector("[name='Examiner']").value = btn.dataset.examiner;
+      form.querySelector("[name='start_time']").value = btn.dataset.start_time;
+      form.querySelector("[name='end_time']").value = btn.dataset.end_time;
+      form.querySelector("[name='location']").value = btn.dataset.location;
+      modal.show();
+    });
+  });
+
+  // Submit Add/Edit grading form via AJAX
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    const formData = new FormData(form);
+    const actionUrl = form.action;
+
+    fetch(actionUrl, {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+      },
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        location.reload(); // Refresh page to show updated gradings
+      } else {
+        alert("Error saving grading.");
+        console.error(data.errors);
+      }
+    })
+    .catch(error => {
+      alert("An error occurred.");
+      console.error(error);
+    });
+  });
+
+  // Attendance modal logic
+  const attendanceModal = document.getElementById('attendanceModal');
+  const attendanceList = document.getElementById('attendance-list');
+
+  attendanceModal.addEventListener('show.bs.modal', function (event) {
+    const button = event.relatedTarget;
+    const gradingId = button.getAttribute('data-grading-id');
+
+    // Store gradingId on modal for later use in saving attendance
+    attendanceModal.setAttribute('data-grading-id', gradingId);
+
+    attendanceList.innerHTML = '<p class="text-muted">Loading members...</p>';
+
+    fetch(`/gradings/${gradingId}/attendance/`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.members.length === 0) {
+          attendanceList.innerHTML = '<p class="text-muted">No members found.</p>';
+        } else {
+          attendanceList.innerHTML = data.members.map(member => `
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="checkbox" name="attendance" value="${member.id}" id="member-${member.id}" ${member.present ? 'checked' : ''}>
+              <label class="form-check-label" for="member-${member.id}">
+                <img src="${member.profile_photo}" alt="Profile" class="rounded-circle me-2" width="32" height="32" style="object-fit: cover;">
+                ${member.forename} ${member.surname}
+              </label>
+            </div>
+          `).join('');
+        }
+      });
+  });
+
+  //
