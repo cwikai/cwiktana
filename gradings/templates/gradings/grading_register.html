@@ -19,7 +19,8 @@
     <strong>Date:</strong> {{ grading.start_time|date:"d M Y H:i" }}
   </p>
 
-  <form method="POST" action="{% url 'gradings:save_register' grading.id %}">
+  <!-- Update this action URL to use the correct URL name and namespace -->
+  <form method="POST" action="{% url 'gradings:save_grading_register' grading.id %}">
     {% csrf_token %}
 
     <!-- Members Table -->
@@ -46,7 +47,7 @@
             <td>{{ member.first_name }} {{ member.last_name }}</td>
             <td>
               <input type="checkbox" name="attendance" value="{{ member.id }}"
-                {% if attendance_data|get_item:member.id %}checked{% endif %}>
+                {% if member.present %}checked{% endif %}>
             </td>
           </tr>
           {% endfor %}

@@ -43,7 +43,7 @@
         <tr>
           <td>{{ grading.class_name }}</td>
           <td>{{ grading.instructor }}</td>
-          <td>{{ grading.Examiner }}</td>
+          <td>{{ grading.examiner }}</td>
           <td>{{ grading.start_time|date:"D, d M Y H:i" }}</td>
           <td>{{ grading.end_time|date:"D, d M Y H:i" }}</td>
           <td>{{ grading.location }}</td>
@@ -61,14 +61,14 @@
           <td>
             {% if not show_archived %}
               <!-- Attendance Button -->
-              <a href="{% url 'gradings:grading_register' grading.id %}" class="btn btn-sm btn-outline-info mb-1">📋 Attendance</a>
+              <a href="{% url 'gradings:grading_register' grading.id %}" class="btn btn-sm btn-outline-info mb-1">📋 Attendees</a>
 
               <!-- Edit Button -->
               <a href="#" class="btn btn-sm btn-warning mb-1 edit-grading-btn"
                  data-id="{{ grading.pk }}"
                  data-class_name="{{ grading.class_name|escapejs }}"
                  data-instructor="{{ grading.instructor|escapejs }}"
-                 data-examiner="{{ grading.Examiner|escapejs }}"
+                 data-examiner="{{ grading.examiner|escapejs }}"
                  data-start_time="{{ grading.start_time|date:'Y-m-d\\TH:i' }}"
                  data-end_time="{{ grading.end_time|date:'Y-m-d\\TH:i' }}"
                  data-location="{{ grading.location|escapejs }}">Edit</a>
@@ -122,7 +122,7 @@
           </div>
           <div class="mb-3">
             <label for="examiner" class="form-label">Examiner</label>
-            <input type="text" class="form-control" name="Examiner">
+            <input type="text" class="form-control" name="examiner">
           </div>
           <div class="mb-3">
             <label for="start_time" class="form-label">Start Time</label>
@@ -136,6 +136,8 @@
             <label for="location" class="form-label">Location</label>
             <input type="text" class="form-control" name="location">
           </div>
+          <!-- Include a hidden input for status, defaulting to scheduled -->
+          <input type="hidden" name="status" value="scheduled">
         </div>
         <div class="modal-footer">
           <button type="submit" class="btn btn-success">Save</button>
@@ -191,7 +193,7 @@ document.addEventListener("DOMContentLoaded", () => {
       modalTitle.textContent = "Edit Grading";
       form.querySelector("[name='class_name']").value = btn.dataset.class_name;
       form.querySelector("[name='instructor']").value = btn.dataset.instructor;
-      form.querySelector("[name='Examiner']").value = btn.dataset.examiner;
+      form.querySelector("[name='examiner']").value = btn.dataset.examiner;
       form.querySelector("[name='start_time']").value = btn.dataset.start_time;
       form.querySelector("[name='end_time']").value = btn.dataset.end_time;
       form.querySelector("[name='location']").value = btn.dataset.location;
@@ -258,5 +260,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       });
   });
-
+});
+</script>
 {% endblock %}

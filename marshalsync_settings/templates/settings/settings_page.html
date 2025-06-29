@@ -1,0 +1,87 @@
+{% extends 'layout.html' %}
+{% block title %}Settings – MarshalSync{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <h1 class="text-glow mb-4">⚙️ MarshalSync. Settings</h1>
+<section class="col-12 col-md-9 order-1 order-md-2">
+
+    <p class="text-center">Customise you MarshalSync. settings</p>
+
+    <div class="row g-4 mt-4">
+
+
+       <!-- User Login & Roles -->
+      <div class="col-12 col-sm-6 col-md-4">
+        <a href="{% url 'settings:user_login_settings' %}" class="tile">
+          <h4>👥 User Login & Roles</h4>
+          <p>Manage logins, roles like Admin/Instructor, and assign permissions.</p>
+        </a>
+      </div>
+
+      <!-- System Permissions -->
+      <div class="col-12 col-sm-6 col-md-4">
+        <a href="{% url 'members:members_list' %}" class="tile">
+          <h4>🛠️ System Permissions  </h4>
+          <p>Configure access rights for custom features</p>
+        </a>
+      </div>
+
+      <!-- Branding & Customization -->
+<div class="col-12 col-sm-6 col-md-4">
+  <a href="{% url 'classes:classes_list' %}" class="tile">
+    <h4>🎨 Branding & Customization</h4>
+    <p>Logo, color scheme, and theme preferences</p>
+  </a>
+</div>
+<!--  Class Form Settings -->
+<div class="col-12 col-sm-6 col-md-4">
+  <a href="{% url 'classes:classes_list' %}" class="tile">
+    <h4>🧾Class Form Settings</h4>
+    <p>Add custom fields to Grading creation form</p>
+  </a>
+</div>
+<!--  Grading Form Settings -->
+<div class="col-12 col-sm-6 col-md-4">
+  <a href="{% url 'classes:classes_list' %}" class="tile">
+    <h4>🧪Grading Form Settings</h4>
+    <p>Add custom fields to class creation form</p>
+  </a>
+</div>
+
+
+
+
+      <!-- Billing & Subscriptions -->
+<div class="col-12 col-sm-6 col-md-4">
+  <a href="{% url 'gradings:grading_list' %}" class="tile">
+    <h4>💳Billing & Subscriptions</h4>
+    <p>Plan upgrades, invoices, and payment methods</p>
+  </a>
+</div>
+
+
+      <!-- Notifications -->
+      <div class="col-12 col-sm-6 col-md-4">
+        <a href="{% url 'manage_licenses' %}" class="tile">
+          <h4>✉️Notifications</h4>
+          <p>Email, SMS, and push alert preferences</p>
+        </a>
+      </div>
+      <!-- Security -->
+      <div class="col-12 col-sm-6 col-md-4">
+        <a href="{% url 'manage_licenses' %}" class="tile">
+          <h4>🔐Security</h4>
+          <p>2FA, session timeout, and IP restrictions</p>
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+    <!-- Add more tiles in the same format -->
+
+  </div>
+</div>
+{% endblock %}

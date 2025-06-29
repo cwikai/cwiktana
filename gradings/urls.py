@@ -9,6 +9,8 @@ urlpatterns = [
     path('edit/<int:pk>/', views.edit_grading, name='edit_grading'),
 
     path('<int:grading_id>/register/', views.grading_register, name='grading_register'),
+    path('<int:grading_id>/register/save/', views.save_grading_register, name='save_grading_register'),
+
     path('<int:pk>/complete/', views.complete_grading, name='complete_grading'),
     path('<int:pk>/cancel/', views.cancel_grading, name='cancel_grading'),
 

@@ -9,29 +9,31 @@ import base64
 from django.core.files.base import ContentFile
 from django.urls import reverse
 from django.views.decorators.http import require_http_methods
+from marshalsync_settings.models import Role
+
+
 
 # View to list and search members
 def members_list(request):
-    query = request.GET.get("q")
+    query = request.GET.get("q", "")
+    members = Member.objects.all()
     if query:
-        members_list = Member.objects.filter(
-            Q(first_name__icontains=query) | Q(last_name__icontains=query)
-        )
-    else:
-        members_list = Member.objects.all()
+        members = members.filter(first_name__icontains=query) | members.filter(last_name__icontains=query)
 
-    paginator = Paginator(members_list, 10)  # Show 10 members per page
-    page_number = request.GET.get('page')
-    members = paginator.get_page(page_number)
+    # Add role_ids list to each member
+    for m in members:
+        m.role_ids = list(m.roles.values_list('id', flat=True))
 
-    form = MemberForm()
-    return render(request, "members/members_list.html", {
-        "members": members,
-        "form": form,
-        "query": query or '',
-    })
+    paginator = Paginator(members, 10)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
 
-
+    context = {
+        "members": page_obj,
+        "query": query,
+        "roles": Role.objects.all(),
+    }
+    return render(request, "members/members_list.html", context)
 # View to add a new member with optional webcam image
 def add_member(request):
     if request.method == "POST":

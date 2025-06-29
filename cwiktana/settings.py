@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'members',  # Custom app for managing members
     'classes',  # Custom app for managing classes
     'gradings',
+    'faq',  # Custom app for FAQs
+    'marshalsync_settings',
 
     
 ]
@@ -139,3 +141,17 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = '/accounts/login/'  # or wherever your login page is
 LOGIN_REDIRECT_URL = '/dashboard/'  # optional, where to redirect after login
 LOGOUT_REDIRECT_URL = '/accounts/login/'  # optional, where to redirect after logout
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    },
+}

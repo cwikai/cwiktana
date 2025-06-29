@@ -1,0 +1,45 @@
+{% extends 'layout.html' %}
+
+{% block title %}Deactivated Users – MarshalSync{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="text-glow">♻️ Deactivated Users</h1>
+    <a href="{% url 'settings:user_management' %}" class="btn btn-secondary">← Back to Active Users</a>
+  </div>
+
+  <div class="tile">
+    <h4 class="mb-3">Deactivated Users</h4>
+    <table class="table table-dark table-striped table-bordered rounded">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Date Joined</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+          <tr>
+            <td>{{ user.first_name }} {{ user.last_name }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.date_joined|date:"Y-m-d" }}</td>
+            <td>
+              <form action="{% url 'settings:reactivate_user' user.id %}" method="POST" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-success" onclick="return confirm('Reactivate this user?');">
+                  Reactivate
+                </button>
+              </form>
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="4" class="text-center">No deactivated users found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

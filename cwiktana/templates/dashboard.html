@@ -1,12 +1,12 @@
 {% extends 'layout.html' %}
 {% load static %}
 
-{% block title %}Home - Cwiktana{% endblock %}
+{% block title %}Home - MarshalSync.{% endblock %}
 
 {% block content %}
 <section class="col-12 col-md-9 order-1 order-md-2">
   <div class="container py-4">
-    <h1 class="text-center">Welcome to Cwiktana</h1>
+    <h1 class="text-center">Welcome to MarshalSync.</h1>
     <p class="text-center">Your one-stop solution for managing members.</p>
 
     <div class="row g-4 mt-4">
@@ -14,22 +14,21 @@
 
        <!-- Settings Tile -->
       <div class="col-12 col-sm-6 col-md-4">
-        <a href="{% url 'members:members_list' %}" class="tile">
-          <h4>💳 Settings</h4>
-          <p>Customise you cwiktana settings</p>
+        <a href="{% url 'settings:settings_page' %}" class="tile">
+          <h4>⚙️ Settings</h4>
+          <p>Customise you MarshalSync. settings</p>
         </a>
       </div>
 
       <!-- Membership Tile -->
       <div class="col-12 col-sm-6 col-md-4">
         <a href="{% url 'members:members_list' %}" class="tile">
-          <h4>💳 Memberships</h4>
+          <h4>💳 Memberships  </h4>
           <p>Manage your club memberships</p>
         </a>
       </div>
 
       <!-- Classes Tile -->
-      <<!-- Classes Tile -->
 <div class="col-12 col-sm-6 col-md-4">
   <a href="{% url 'classes:classes_list' %}" class="tile">
     <h4>📚 Classes</h4>
@@ -39,12 +38,13 @@
 
 
       <!-- Grading Tile -->
-      <div class="col-12 col-sm-6 col-md-4">
-        <a href="{% url 'gradings' %}" class="tile">
-          <h4>📊 Grading</h4>
-          <p>View and manage grading</p>
-        </a>
-      </div>
+<div class="col-12 col-sm-6 col-md-4">
+  <a href="{% url 'gradings:grading_list' %}" class="tile">
+    <h4>📊 Grading</h4>
+    <p>View and manage grading</p>
+  </a>
+</div>
+
 
       <!-- Licenses Tile -->
       <div class="col-12 col-sm-6 col-md-4">

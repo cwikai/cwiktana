@@ -1,0 +1,30 @@
+{% extends 'layout.html' %}
+{% block title %}User Login & Roles – MarshalSync{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <h1>User Login & Roles</h1>
+  <p>Manage user logins, roles, and permissions here.</p>
+
+  <!-- You can add links or tiles here to: -->
+<div class="row g-4 mt-4">
+
+      <!-- User Login Settings -->
+      <div class="col-12 col-sm-6 col-md-4">
+        <a href="{% url 'settings:user_management' %}" class="tile">
+          <h4>🔐 User Login Settings</h4>
+          <p>Configure user login options and security settings.</p>
+        </a>
+      </div>
+
+      <!-- Role Management -->
+      <div class="col-12 col-sm-6 col-md-4">
+        <a href="{% url 'settings:roles_management' %}" class="tile">
+          <h4>🛠️ Role Management</h4>
+          <p>Create and manage user roles like Admin, Instructor, etc.</p>
+        </a>
+      </div>
+
+  <!-- Add more login-related settings here -->
+</div>
+{% endblock %}

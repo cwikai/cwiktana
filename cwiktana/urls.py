@@ -4,6 +4,9 @@ from . import views  # Project-level views
 from accounts import views as accounts_views  # Avoid conflict
 from django.conf import settings
 from django.conf.urls.static import static
+from faq.views import SupportAPIView
+
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -19,6 +22,11 @@ urlpatterns = [
     path('manage_gradings/', views.manage_gradings, name='manage_gradings'),  # Optional: project-level view if still needed
     path('licenses/', views.manage_licenses, name='manage_licenses'),
     path('accounts/', include('accounts.urls')),
+    path('api/support/', SupportAPIView.as_view(), name='support_api'),
+    path('api/support/', include('faq.urls')),
+    path("settings/", include("marshalsync_settings.urls", namespace="settings")),
+    
+
 ]
 
 if settings.DEBUG:
