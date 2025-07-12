@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block title %}Start Grading – {{ grading.class_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <h1 class="text-glow">⭐ Start Grading: {{ grading.class_name }}</h1>
+  <p>Grading scheduled on {{ grading.start_time }}</p>
+
+  <div class="alert alert-info">
+    This is where you'll assign grading sheets and rate students.
+  </div>
+
+  <h3>Coming Soon:</h3>
+  <ul>
+    <li>List of grading sheets (to be created from settings)</li>
+    <li>List of registered members</li>
+    <li>Star rating UI</li>
+  </ul>
+
+  <a href="{% url 'gradings:grading_list' %}" class="btn btn-secondary mt-3">⬅ Back to Gradings</a>
+</div>
+{% endblock %}

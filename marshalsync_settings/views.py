@@ -6,21 +6,26 @@ from django.views.decorators.http import require_POST
 from django.http import JsonResponse
 from django.contrib.auth.hashers import make_password
 from django.contrib import messages
+from .models import GradingSheetTemplate
+from .forms import GradingSheetTemplateForm
+from django.contrib.auth.decorators import login_required
+from .forms import BeltForm
+from .models import Belt
 
 def settings_page(request):
     settings = Settings.objects.all()
-    return render(request, 'settings/settings_page.html', {
+    return render(request, 'marshalsync_settings/settings_page.html', {
         'settings': settings,
     })
 
 def user_login_settings(request):
-    return render(request, 'settings/user_login_roles.html')
+    return render(request, 'marshalsync_settings/user_login_roles.html')
 
 def user_management(request):
     users = User.objects.filter(is_active=True)
     members = Member.objects.all()
     roles = Role.objects.all()
-    return render(request, 'settings/user_management.html', {
+    return render(request, 'marshalsync_settings/user_management.html', {
         'users': users,
         'members': members,
         'roles': roles,
@@ -28,7 +33,7 @@ def user_management(request):
 
 def roles_management(request):
     roles = Role.objects.all()
-    return render(request, 'settings/roles_management.html', {'roles': roles})
+    return render(request, 'marshalsync_settings/roles_management.html', {'roles': roles})
 
 @require_POST
 def create_user_account(request):
@@ -132,7 +137,7 @@ def deactivate_user(request, user_id):
 
 def deactivated_users(request):
     users = User.objects.filter(is_active=False)
-    return render(request, 'settings/deactivated_users.html', {
+    return render(request, 'marshalsync_settings/deactivated_users.html', {
         'users': users,
     })
 
@@ -143,3 +148,79 @@ def reactivate_user(request, user_id):
     user.save()
     messages.success(request, f'User {user.get_full_name()} reactivated successfully.')
     return redirect('settings:deactivated_users')
+
+@login_required
+def grading_sheet_template_list(request):
+    templates = GradingSheetTemplate.objects.filter(created_by=request.user)
+    return render(request, 'marshalsync_settings/grading_sheet_template_list.html', {'templates': templates})
+
+@login_required
+def grading_sheet_template_create(request):
+    if request.method == 'POST':
+        form = GradingSheetTemplateForm(request.POST)
+        if form.is_valid():
+            template = form.save(commit=False)
+            template.created_by = request.user
+            template.save()
+            return redirect('marshalsync_settings:grading_sheet_template_list')
+    else:
+        form = GradingSheetTemplateForm()
+    return render(request, 'marshalsync_settings/grading_sheet_template_form.html', {'form': form})
+
+@login_required
+def grading_sheet_template_edit(request, pk):
+    template = get_object_or_404(GradingSheetTemplate, pk=pk, created_by=request.user)
+    if request.method == 'POST':
+        form = GradingSheetTemplateForm(request.POST, instance=template)
+        if form.is_valid():
+            form.save()
+            return render(request, 'marshalsync_settings/grading_sheet_template_list.html')
+
+    else:
+        form = GradingSheetTemplateForm(instance=template)
+    return render(request, 'marshalsync_settings/grading_sheet_template_form.html', {'form': form})
+
+
+@login_required
+def belt_list(request):
+    belts = Belt.objects.all()
+    return render(request, 'marshalsync_settings/belts_list.html', {'belts': belts})
+
+@login_required
+def belt_create(request):
+    if request.method == 'POST':
+        form = BeltForm(request.POST)
+        if form.is_valid():
+            template = form.save(commit=False)
+            template.created_by = request.user
+            template.save()
+            return redirect('settings:belts_list')  # Use name from `urls.py`
+    else:
+        form = BeltForm()
+
+    return render(request, 'marshalsync_settings/belt_form.html', {'form': form})
+
+
+
+@login_required
+def belt_edit(request, pk):
+    belt = get_object_or_404(Belt, pk=pk, created_by=request.user)
+    if request.method == 'POST':
+        form = BeltForm(request.POST, instance=belt)
+        if form.is_valid():
+            form.save()
+            return redirect('settings:belts_list')
+
+    else:
+        form = BeltForm(instance=belt)
+    return render(request, 'marshalsync_settings/belt_form.html', {'form': form})
+
+
+#@login_required
+#def syllabus(request, pk):
+    #template = get_object_or_404(GradingSheetTemplate, pk=pk, created_by=request.user)
+    #if request.method == 'POST':
+        #form = GradingSheetTemplateForm(request.POST, instance=template)
+        #if form.is_valid():
+            #form.save()
+            #return render(request, 'marshalsync_settings/grading_sheet_template_list.html')

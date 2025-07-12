@@ -62,6 +62,8 @@
             {% if not show_archived %}
               <!-- Attendance Button -->
               <a href="{% url 'gradings:grading_register' grading.id %}" class="btn btn-sm btn-outline-info mb-1">📋 Attendees</a>
+              <!-- Start Grading -->
+               <a href="{% url 'gradings:grading_sheets' grading.id %}" class="btn btn-sm btn-primary mb-1">⭐ Start Grading</a>
 
               <!-- Edit Button -->
               <a href="#" class="btn btn-sm btn-warning mb-1 edit-grading-btn"

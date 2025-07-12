@@ -1,0 +1,33 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="container py-4">
+  <h1>Belts & Grades</h1>
+  <a href="{% url 'marshalsync_settings:belt_create' %}" class="btn btn-primary mb-3">➕ Add Belt</a>
+
+  <table class="table table-dark table-striped">
+    <thead>
+      <tr>
+        <th>Grade</th>
+        <th>Belt Colour</th>
+        <th>Active</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for belt in belts %}
+      <tr>
+        <td>{{ belt.grade }}</td>
+        <td>{{ belt.belt_colour }}</td>
+        <td>{{ belt.is_active|yesno:"Yes,No" }}</td>
+        <td>
+          <a href="{% url 'marshalsync_settings:grading_sheet_template_edit' belt.pk %}" class="btn btn-sm btn-info">Syllabus</a>
+          <a href="{% url 'marshalsync_settings:belt_edit' belt.pk %}" class="btn btn-sm btn-warning">Edit</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="4">No belts found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

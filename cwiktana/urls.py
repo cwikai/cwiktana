@@ -25,6 +25,8 @@ urlpatterns = [
     path('api/support/', SupportAPIView.as_view(), name='support_api'),
     path('api/support/', include('faq.urls')),
     path("settings/", include("marshalsync_settings.urls", namespace="settings")),
+    path('settings/', include('marshalsync_settings.urls', namespace='marshalsync_settings')),
+
     
 
 ]

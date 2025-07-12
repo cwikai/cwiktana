@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 class Settings(models.Model):
     key = models.CharField(max_length=100, unique=True)
@@ -31,3 +32,30 @@ class RolePermission(models.Model):
 
     class Meta:
         unique_together = ('role', 'permission')  # Prevent duplicates
+
+class GradingSheetTemplate(models.Model):
+    name = models.CharField(max_length=100)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.name
+    
+class Belt(models.Model):
+    grade = models.CharField(max_length=100)
+    belt_colour = models.CharField(max_length=100)
+    is_active = models.BooleanField(default=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+
+#class syllabus(models.Model):
+    #sylabus_module = models.CharField(max_length=100)
+   # syllabus_content = models.TextField()
+    #created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    #is_active = models.BooleanField(default=True)
+
+   # def __str__(self):
+       # return self.name

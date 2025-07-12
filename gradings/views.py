@@ -8,6 +8,10 @@ from .models import Grading, GradingAttendance
 from .forms import GradingForm
 from members.models import Member
 import json
+from .models import Grading, GradingSheet, GradingSheetTemplate
+
+
+
 
 # List and search scheduled gradings
 def grading_list(request):
@@ -175,3 +179,24 @@ def grading_attended(request, grading_id):
 
 def manage_gradings(request):
     return render(request, 'gradings/grading_list.html')
+
+
+def start_grading(request, grading_id):
+    grading = get_object_or_404(Grading, id=grading_id)
+
+
+    # Eventually this will be dynamic — for now, we'll show all templates (you’ll limit to active later)
+    templates = GradingSheetTemplate.objects.filter(is_active=True)
+
+    # Example: attendees linked through a ManyToManyField or attendance register
+    attendees = grading.attendees.all() if hasattr(grading, 'attendees') else []
+
+    grading_sheets = GradingSheet.objects.filter(grading=grading).select_related('template')
+
+    context = {
+        'grading': grading,
+        'templates': templates,
+        'grading_sheets': grading_sheets,
+        'attendees': attendees,
+    }
+    return render(request, 'gradings/grading_sheets.html', context)

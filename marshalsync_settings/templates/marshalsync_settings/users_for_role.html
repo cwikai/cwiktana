@@ -1,0 +1,44 @@
+{% extends 'layout.html' %}
+
+{% block title %}Assign Users to Role – MarshalSync{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <h1>Assign Users to Role: {{ role.name }}</h1>
+
+  <form method="post" action="{% url 'settings:assign_users_to_role_page' role.id %}">
+
+    {% csrf_token %}
+    <table class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th>Select</th>
+          <th>Name</th>
+          <th>Email</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+        <tr>
+          <td>
+            <input type="checkbox" name="user_ids" value="{{ user.id }}"
+              {% if user.id in assigned_user_ids %}checked{% endif %}>
+          </td>
+          <td>{{ user.get_full_name }}</td>
+          <td>{{ user.email }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="3" class="text-center">No users found.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="mb-3">
+      <button type="submit" class="btn btn-primary">Save Assignments</button>
+      <a href="{% url 'settings:roles_management' %}" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

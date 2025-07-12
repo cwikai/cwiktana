@@ -22,4 +22,6 @@ urlpatterns = [
     # Optional: API endpoints for AJAX attendance
     path('<int:grading_id>/attendance/', views.get_grading_attendance, name='get_grading_attendance'),
     path('<int:grading_id>/attendance/save/', views.save_grading_attendance, name='save_grading_attendance'),
+
+    path('<int:grading_id>/sheets/', views.start_grading, name='grading_sheets'),
 ]
